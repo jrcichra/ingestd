@@ -78,6 +78,13 @@ func main() {
 		})
 	})
 
+	// / so things know we exist
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "ingestd",
+		})
+	})
+
 	//NoRoute replaces 404 with a route (expecting database/table_name) with a JSON payload of what is to be inserted
 	r.NoRoute(func(c *gin.Context) {
 		// Handle internal errors by sending the error to the client
