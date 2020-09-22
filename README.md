@@ -34,3 +34,5 @@
     Form the URL and JSON payload to match your database schema.
 
     If the insert was successful, the HTTP server will return an empty 200 OK response. Any other issue will return a 500 with a JSON body of the server-side error.
+# Todo
++ Key-based authentication - optionally, only insert rows from clients with public keys defined in an `authorized_keys` file. Is there a cryptographic library that already does this?
