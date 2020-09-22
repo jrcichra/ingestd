@@ -1,6 +1,6 @@
 # ingestd
 + HTTP server that easily ingests data into a database (powered by [gin](https://github.com/gin-gonic/gin)!)
-+ Just POST JSON to http://server/database/table
++ Just POST JSON to http://hostname:port/database/table
 
 # Usage
 + Specify your database credentials in `config.txt`
@@ -20,7 +20,7 @@
     ```
 + Try simple GET to make sure gin is up:
     ```
-    $ curl http://hostname/ping
+    $ curl http://hostname:port/ping
     {"message":"pong"}
     $
     ```
@@ -29,7 +29,7 @@
     curl -i --header "Content-Type: application/json" \
     --request POST \
     --data "{"col1": "value1", "col2": "value2"}" \
-    http://localhost:8080/database/table
+    http://hostname:port/database/table
     ```
     Form the URL and JSON payload to match your database schema.
 
