@@ -111,9 +111,11 @@ func main() {
 
 		// Loop through keys in the interface
 		prepare := "insert " + database + "." + table + " set "
-		// Add a question mark for each key
-		for k := range data {
+		// Add a question mark for each key and prepare the data in an array of interfaces
+		var params []interface{}
+		for k, v := range data {
 			prepare += k + " = ?,"
+			params = append(params, v)
 		}
 		// Remove the last comma
 		prepare = prepare[:len(prepare)-1]
@@ -125,11 +127,6 @@ func main() {
 			panic(err)
 		}
 
-		// Execute the
-		var params []interface{}
-		for _, v := range data {
-			params = append(params, v)
-		}
 		_, err = stmt.Exec(params...)
 		if err != nil {
 			panic(err)
