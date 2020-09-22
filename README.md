@@ -15,7 +15,7 @@
     --hostname=ingestd \
     --restart=unless-stopped \
     -v ${PWD}/config.txt:/ingestd/config.txt \
-    -p 8080:8080 \      # Change left side port to your liking
+    -p 8080:8080 \
     jrcichra/ingestd
     ```
 + Try simple GET to make sure gin is up:

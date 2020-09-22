@@ -1,0 +1,7 @@
+Dockerfile
+ingestd
+ingestd.yaml
+config.txt
+post.sh
+README.md
+.gitignore

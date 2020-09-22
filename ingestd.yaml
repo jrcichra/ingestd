@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingestd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingestd
+  namespace: ingestd
+  labels:
+    app: ingestd
+spec:
+  ports:
+    - port: 8080
+      name: ingestd
+  selector:
+    app: ingestd
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: ingestd-secret
+  namespace: ingestd
+type: Opaque
+stringData:
+  "config.txt": "username:password@tcp(hostname)/" # Modify secret to match your database credentials
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ingestd
+  name: ingestd
+  labels:
+    app: ingestd
+spec:
+  selector:
+    matchLabels:
+      app: ingestd
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: ingestd
+    spec:
+      containers:
+        - image: jrcichra/ingestd
+          name: ingestd
+          ports:
+            - containerPort: 8080
+              name: ingestd
+          volumeMounts:
+            - name: secret
+              mountPath: /ingestd/config.txt
+              subPath: config.txt
+      volumes:
+        - name: secret
+          secret:
+            secretName: ingestd-secret

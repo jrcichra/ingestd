@@ -7,4 +7,4 @@ RUN make
 FROM alpine:3.12.0
 WORKDIR /ingestd
 COPY --from=0 /ingestd/ingestd .
-CMD /ingestd/ingestd
+CMD ./ingestd
