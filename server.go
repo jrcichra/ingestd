@@ -122,12 +122,22 @@ func main() {
 
 		// Prepare the statement
 		log.Println("prepare=", prepare)
-		stmt, err := db.Prepare(prepare)
+		tx, err := db.Begin()
+		if err != nil {
+			panic(err)
+		}
+		defer tx.Rollback()
+		stmt, err := tx.Prepare(prepare)
 		if err != nil {
 			panic(err)
 		}
 
 		_, err = stmt.Exec(params...)
+		if err != nil {
+			panic(err)
+		}
+		//commit
+		err = tx.Commit()
 		if err != nil {
 			panic(err)
 		}
