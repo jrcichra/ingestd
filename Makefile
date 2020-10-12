@@ -1,2 +1,2 @@
 default:
-	go build -o ingestd
+	go build -o ingestd -race
