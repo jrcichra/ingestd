@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -11,7 +10,6 @@ import (
 
 	"database/sql"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -106,8 +104,8 @@ func main() {
 		table := parts[2]
 
 		// Print debug
-		spew.Dump(data)
-		fmt.Println(route)
+		// spew.Dump(data)
+		// fmt.Println(route)
 
 		// Loop through keys in the interface
 		prepare := "insert " + database + "." + table + " set "
@@ -121,7 +119,7 @@ func main() {
 		prepare = prepare[:len(prepare)-1]
 
 		// Prepare the statement
-		log.Println("prepare=", prepare)
+		// log.Println("prepare=", prepare)
 		tx, err := db.Begin()
 		if err != nil {
 			panic(err)
