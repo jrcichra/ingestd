@@ -139,6 +139,9 @@ func main() {
 		ins += ")"
 
 		//run
+		fmt.Println("Insert statement:", ins)
+		fmt.Println("params:")
+		fmt.Println(params...)
 		_, err := db.Exec(ins, params...)
 		if err != nil {
 			fmt.Println(err)
