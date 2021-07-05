@@ -128,7 +128,7 @@ func main() {
 		//values
 		ins += ") VALUES ("
 		//variable for each value
-		i := 0
+		i := 1
 		for range data {
 			ins += "$" + strconv.Itoa(i) + ","
 			i++
