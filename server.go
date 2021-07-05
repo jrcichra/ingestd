@@ -2,9 +2,11 @@ package main
 
 import (
 	"bufio"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -113,53 +115,38 @@ func main() {
 		// fmt.Println(route)
 
 		// Loop through keys in the interface
-		prepare := "insert into " + schema + "." + table + " ("
+		ins := "insert into " + schema + "." + table + " ("
 
 		// Put in the column names
 		var params []interface{}
 		for k, v := range data {
-			prepare += k + ","
+			ins += k + ","
 			params = append(params, v)
 		}
 		// Remove the last comma
-		prepare = prepare[:len(prepare)-1]
+		ins = ins[:len(ins)-1]
 		//values
-		prepare += ") VALUES ("
-		//question mark for each value
+		ins += ") VALUES ("
+		//variable for each value
+		i := 0
 		for range data {
-			prepare += "?,"
+			ins += "$" + strconv.Itoa(i) + ","
+			i++
 		}
 		// Remove the last comma
-		prepare = prepare[:len(prepare)-1]
+		ins = ins[:len(ins)-1]
 		//end paren
-		prepare += ")"
+		ins += ")"
 
-		// Prepare the statement
-		log.Println("prepare=", prepare)
-		tx, err := db.Begin()
+		//run
+		_, err := db.Exec(ins, params)
 		if err != nil {
-			panic(err)
-		}
-		defer tx.Rollback()
-		stmt, err := tx.Prepare(prepare)
-		if err != nil {
-			panic(err)
+			fmt.Println(err)
+			c.Status(503)
+		} else {
+			c.Status(200)
 		}
 
-		_, err = stmt.Exec(params...)
-		if err != nil {
-			panic(err)
-		}
-		//commit
-		err = tx.Commit()
-		if err != nil {
-			panic(err)
-		}
-		// Clear the prepared statement
-		stmt.Close()
-
-		// db.Exec("INSERT INTO ?.? VALUES ")
-		c.Status(200)
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
