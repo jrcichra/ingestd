@@ -139,7 +139,7 @@ func main() {
 		ins += ")"
 
 		//run
-		_, err := db.Exec(ins, params)
+		_, err := db.Exec(ins, params...)
 		if err != nil {
 			fmt.Println(err)
 			c.Status(503)
