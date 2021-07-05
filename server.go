@@ -124,7 +124,7 @@ func main() {
 		prepare = prepare[:len(prepare)-1]
 
 		// Prepare the statement
-		// log.Println("prepare=", prepare)
+		log.Println("prepare=", prepare)
 		tx, err := db.Begin()
 		if err != nil {
 			panic(err)
