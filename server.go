@@ -11,12 +11,14 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	_ "github.com/go-sql-driver/mysql"
+	// _ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 func connectToDB(dsn *string) (*sql.DB, error) {
 	// connect to the database
-	db, err := sql.Open("mysql", *dsn)
+	// db, err := sql.Open("mysql", *dsn)
+	db, err := sql.Open("postgres", *dsn)
 	if err == nil {
 		err = db.Ping()
 	}
@@ -49,6 +51,9 @@ func getDSN() *string {
 	}
 	log.Println("path=", path)
 	f, err := os.Open(path + "/config.txt")
+	if err != nil {
+		panic(err)
+	}
 	fscanner := bufio.NewScanner(f)
 	var dsn string
 	for fscanner.Scan() {
