@@ -88,7 +88,7 @@ func main() {
 		})
 	})
 
-	//NoRoute replaces 404 with a route (expecting database/table_name) with a JSON payload of what is to be inserted
+	//NoRoute replaces 404 with a route (expecting schema/table_name) with a JSON payload of what is to be inserted
 	r.NoRoute(func(c *gin.Context) {
 		// Handle internal errors by sending the error to the client
 		defer func() {
@@ -103,9 +103,9 @@ func main() {
 		c.BindJSON(&data)
 		// Get the route
 		route := c.Request.URL.String()
-		// Get database / table
+		// Get schema / table
 		parts := strings.SplitN(route, "/", 3)
-		database := parts[1]
+		schema := parts[1]
 		table := parts[2]
 
 		// Print debug
@@ -113,7 +113,7 @@ func main() {
 		// fmt.Println(route)
 
 		// Loop through keys in the interface
-		prepare := "insert into " + database + "." + table + " ("
+		prepare := "insert into " + schema + "." + table + " ("
 
 		// Put in the column names
 		var params []interface{}
