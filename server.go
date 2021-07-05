@@ -113,15 +113,26 @@ func main() {
 		// fmt.Println(route)
 
 		// Loop through keys in the interface
-		prepare := "insert " + database + "." + table + " set "
-		// Add a question mark for each key and prepare the data in an array of interfaces
+		prepare := "insert into " + database + "." + table + " ("
+
+		// Put in the column names
 		var params []interface{}
 		for k, v := range data {
-			prepare += k + " = ?,"
+			prepare += k + ","
 			params = append(params, v)
 		}
 		// Remove the last comma
 		prepare = prepare[:len(prepare)-1]
+		//values
+		prepare += ") VALUES ("
+		//question mark for each value
+		for range data {
+			prepare += "?,"
+		}
+		// Remove the last comma
+		prepare = prepare[:len(prepare)-1]
+		//end paren
+		prepare += ")"
 
 		// Prepare the statement
 		log.Println("prepare=", prepare)
