@@ -4,9 +4,13 @@
 
 # Usage
 + Specify your database credentials in `config.txt`
++ See https://github.com/go-sql-driver/mysql#dsn-data-source-name for examples
     ```
     username:password@tcp(hostname)/
     ```
+## Binary
++ Run `make`. Put the config.txt file in the same directory as the binary
+## Container
 + Run the container, mapping in the config file with the credentials:
 
     ```
@@ -35,4 +39,4 @@
 
     If the insert was successful, the HTTP server will return an empty 200 OK response. Any other issue will return a 500 with a JSON body of the server-side error.
 # Todo
-+ Key-based authentication - optionally, only insert rows from clients with public keys defined in an `authorized_keys` file. Is there a cryptographic library that already does this?
++ Key-based authentication - include an SSH public key in each POST and check it against an authorized_keys list

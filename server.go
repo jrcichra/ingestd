@@ -110,10 +110,6 @@ func main() {
 		schema := parts[1]
 		table := parts[2]
 
-		// Print debug
-		// spew.Dump(data)
-		// fmt.Println(route)
-
 		// Loop through keys in the interface
 		ins := "insert into " + schema + "." + table + " ("
 
