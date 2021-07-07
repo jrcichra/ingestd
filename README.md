@@ -40,3 +40,5 @@
     If the insert was successful, the HTTP server will return an empty 200 OK response. Any other issue will return a 500 with a JSON body of the server-side error.
 # Todo
 + Key-based authentication - include an SSH public key in each POST and check it against an authorized_keys list
++ Mutliplexing databases
++ Better config file instead of recompiling constants
