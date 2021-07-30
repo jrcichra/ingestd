@@ -3,11 +3,7 @@
 + Just POST JSON to http://hostname:port/database/table
 
 # Usage
-+ Specify your database credentials in `config.txt`
-+ See https://github.com/go-sql-driver/mysql#dsn-data-source-name for examples
-    ```
-    username:password@tcp(hostname)/
-    ```
++ Specify your database credentials and other options in `config.txt`. See it for an example.
 ## Binary
 + Run `make`. Put the config.txt file in the same directory as the binary
 ## Container
@@ -39,6 +35,4 @@
 
     If the insert was successful, the HTTP server will return an empty 200 OK response. Any other issue will return a 500 with a JSON body of the server-side error.
 # Todo
-+ Key-based authentication - include an SSH public key in each POST and check it against an authorized_keys list
 + Mutliplexing databases
-+ Better config file instead of recompiling constants

@@ -1,0 +1,27 @@
+# write a docker-compose.yml file with postgres
+
+version: '3'
+services:
+  postgres:
+    image: postgres
+    hostname: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ingestd
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+    ports:
+        - 5432:5432
+    volumes:
+        - ./postgres:/var/lib/postgresql/data
+  ingestd:
+    image: ingestd
+    hostname: ingestd
+    build: .
+    ports: 
+        - "8080:8080"
+    volumes:
+        - ./config.txt:/ingestd/config.txt
+    depends_on: 
+        - postgres
