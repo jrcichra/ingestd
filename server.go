@@ -22,7 +22,14 @@ func connectToDB(dsn string, dbtype string) (*sql.DB, error) {
 	log.Println("Connecting with dbtype", dbtype, "and dsn", dsn)
 	db, err := sql.Open(dbtype, dsn)
 	if err == nil {
+		log.Println("Connected to database. Doing a Ping()")
 		err = db.Ping()
+		if err != nil {
+			log.Println(err)
+		}
+		log.Println("Did a Ping()")
+	} else {
+		log.Println("Error connecting to database after Open", err)
 	}
 	return db, err
 }
