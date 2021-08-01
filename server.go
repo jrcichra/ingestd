@@ -264,7 +264,14 @@ func main() {
 		//variable for each value
 		i := 1
 		for range data {
-			ins += "$" + strconv.Itoa(i) + ","
+			//jonathandbriggs
+			//Added Switch Case for pg/mysql. pg wants %n mysql wants ?
+			switch getDBType(){
+			case "postgres":
+				ins += "$" + strconv.Itoa(i) + ","
+			case "mysql":
+				ins += "?" + ","
+			}
 			i++
 		}
 		// Remove the last comma
@@ -278,6 +285,8 @@ func main() {
 			fmt.Println("Insert statement:", ins)
 			fmt.Println("params:")
 			fmt.Println(params...)
+			// Deprecated: drivers shoudl implement StmtExecContext instead (or additionally).
+			// Exec(args []Value) (Result, error)
 			_, err := db.Exec(ins, params...)
 			if err != nil {
 				fmt.Println(err)
