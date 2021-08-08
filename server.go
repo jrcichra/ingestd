@@ -13,6 +13,7 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
@@ -49,6 +50,19 @@ func reconnectToDB(dsn string, dbtype string) *sql.DB {
 		}
 	}
 	return db
+}
+
+func connectToRedis(dsn string) (*redis.Client, error) {
+	// parse the dsn for redis
+	split := strings.Split(dsn, ":")
+	host := split[0]
+	password := split[1]
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     host,
+		Password: password,
+		DB:       0,
+	})
+	return rdb, nil
 }
 
 func inAuthorizedKeys(key string) bool {
@@ -179,7 +193,21 @@ func getDBType() string {
 
 func main() {
 
-	db := reconnectToDB(getDSN(), getDBType())
+	var db *sql.DB
+	var rdb *redis.Client
+
+	dbtype := getDBType()
+	if dbtype == "redis" {
+		var err error
+		rdb, err = connectToRedis(getDSN())
+		if err != nil {
+			log.Println("Error connecting to redis")
+			log.Println(err)
+			return
+		}
+	} else {
+		db = reconnectToDB(getDSN(), dbtype)
+	}
 
 	r := gin.Default()
 
