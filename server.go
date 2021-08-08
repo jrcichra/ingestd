@@ -107,7 +107,7 @@ func readEnvironmentFile() (map[string]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	log.Println("path=", path)
+	// log.Println("path=", path)
 	f, err := os.Open(path + "/config.txt")
 	if err != nil {
 		return nil, err
@@ -266,7 +266,7 @@ func main() {
 		for range data {
 			//jonathandbriggs
 			//Added Switch Case for pg/mysql. pg wants %n mysql wants ?
-			switch getDBType(){
+			switch getDBType() {
 			case "postgres":
 				ins += "$" + strconv.Itoa(i) + ","
 			case "mysql":
