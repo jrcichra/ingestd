@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -13,6 +14,7 @@ import (
 	"database/sql"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-redis/redis"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
@@ -49,6 +51,27 @@ func reconnectToDB(dsn string, dbtype string) *sql.DB {
 		}
 	}
 	return db
+}
+
+func connectToRedis(dsn string) (*redis.Client, error) {
+	// parse the dsn for redis
+	split := strings.Split(dsn, ",")
+	host := split[0]
+	password := split[1]
+	database := split[2]
+	// convert the database to an int
+	db, err := strconv.Atoi(database)
+	if err != nil {
+		log.Println("Error converting database to int")
+		log.Println(err)
+		return nil, err
+	}
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     host,
+		Password: password,
+		DB:       db,
+	})
+	return rdb, nil
 }
 
 func inAuthorizedKeys(key string) bool {
@@ -179,7 +202,21 @@ func getDBType() string {
 
 func main() {
 
-	db := reconnectToDB(getDSN(), getDBType())
+	var db *sql.DB
+	var rdb *redis.Client
+
+	dbtype := getDBType()
+	if dbtype == "redis" {
+		var err error
+		rdb, err = connectToRedis(getDSN())
+		if err != nil {
+			log.Println("Error connecting to redis")
+			log.Println(err)
+			return
+		}
+	} else {
+		db = reconnectToDB(getDSN(), dbtype)
+	}
 
 	r := gin.Default()
 
@@ -287,14 +324,42 @@ func main() {
 			fmt.Println(params...)
 			// Deprecated: drivers shoudl implement StmtExecContext instead (or additionally).
 			// Exec(args []Value) (Result, error)
-			_, err := db.Exec(ins, params...)
-			if err != nil {
-				fmt.Println(err)
-				c.AbortWithStatusJSON(503, gin.H{
-					"message": fmt.Sprint(err),
-				})
-			} else {
+			if getDBType() == "redis" {
+				log.Println("channel=" + schema + "." + table)
+				log.Println("data=", data)
+				log.Println("redis dsn=" + getDSN())
+				// convert data to a string
+				dataStr, err := json.Marshal(data)
+				if err != nil {
+					log.Println("Error encoding json")
+					log.Println(err)
+					c.AbortWithStatusJSON(500, gin.H{
+						"message": fmt.Sprint(err),
+					})
+					return
+				}
+				// send the data to redis
+
+				result := rdb.Publish(schema+"."+table, string(dataStr))
+				if result.Err() != nil {
+					log.Println("Error publishing to channel")
+					log.Println(result.Err())
+					c.AbortWithStatusJSON(500, gin.H{
+						"message": fmt.Sprint(result.Err()),
+					})
+					return
+				}
 				c.Status(200)
+			} else {
+				_, err := db.Exec(ins, params...)
+				if err != nil {
+					fmt.Println(err)
+					c.AbortWithStatusJSON(503, gin.H{
+						"message": fmt.Sprint(err),
+					})
+				} else {
+					c.Status(200)
+				}
 			}
 		} else {
 			log.Println("Authentication failed")
@@ -302,7 +367,6 @@ func main() {
 				"message": "unauthorized",
 			})
 		}
-
 	})
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
