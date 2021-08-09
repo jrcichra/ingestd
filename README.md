@@ -3,7 +3,7 @@
 + Just POST JSON to http://hostname:port/database/table
 
 # Usage
-+ Specify your database credentials and other options in `config.txt`. See it for an example.
++ Specify your database credentials and other options in `config-example.txt`. See it for an example.
 ## Binary
 + Run `make`. Put the config.txt file in the same directory as the binary
 ## Container
