@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"log"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -75,10 +76,18 @@ func (d *Ingest) getDBType() string {
 func (d *Ingest) Insert(schema string, table string, data map[string]interface{}) error {
 	var params []interface{}
 	insert := "insert into " + schema + "." + table + " ("
-	for k, v := range data {
+
+	// Sort by key alphabetically so the database can use a statement over and over
+	keys := make([]string, 0, len(data))
+	for k := range data {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+
+	for _, k := range keys {
 		// prepare the column and value for insert
 		insert += k + ","
-		params = append(params, v)
+		params = append(params, data[k])
 	}
 	// Remove the last comma
 	insert = insert[:len(insert)-1]
@@ -86,7 +95,7 @@ func (d *Ingest) Insert(schema string, table string, data map[string]interface{}
 	insert += ") VALUES ("
 	//variable for each value
 	i := 1
-	for range data {
+	for range keys {
 		//jonathandbriggs
 		//Added Switch Case for pg/mysql. pg wants %n mysql wants ?
 		switch d.getDBType() {
