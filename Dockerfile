@@ -1,4 +1,4 @@
-FROM golang:1.17.7-alpine3.15
+FROM golang:1.18.1-alpine3.15
 WORKDIR /ingestd
 RUN apk add make
 COPY . . 
