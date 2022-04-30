@@ -1,6 +1,6 @@
 FROM golang:1.18.1-alpine3.15
 WORKDIR /ingestd
-RUN apk add make
+RUN apk add make git
 COPY . . 
 RUN make
 
