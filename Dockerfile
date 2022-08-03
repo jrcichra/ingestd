@@ -1,4 +1,4 @@
-FROM golang:1.18.4-alpine3.16
+FROM golang:1.19.0-alpine3.16
 WORKDIR /ingestd
 RUN apk add make git
 COPY . . 
