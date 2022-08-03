@@ -1,11 +1,10 @@
-FROM golang:1.18.4-alpine3.16
+FROM golang:1.19.0-bullseye
 WORKDIR /ingestd
-RUN apk add make git
 COPY . . 
-RUN make
+RUN CGO_ENABLED=0 go build -o ingestd
 
-FROM alpine:3.16
-WORKDIR /ingestd
+FROM gcr.io/distroless/static-debian11
+WORKDIR /
 EXPOSE 8080
 COPY --from=0 /ingestd/ingestd .
-CMD ./ingestd
+ENTRYPOINT [ "/ingestd" ]
