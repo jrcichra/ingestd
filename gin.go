@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func (d *Ingest) registerBasicChecks() {
@@ -21,6 +22,11 @@ func (d *Ingest) registerBasicChecks() {
 		c.JSON(200, gin.H{
 			"message": "ingestd",
 		})
+	})
+
+	// metrics
+	d.Engine.GET("/metrics", func(c *gin.Context) {
+		gin.WrapH(promhttp.Handler())
 	})
 }
 
