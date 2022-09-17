@@ -8,6 +8,14 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
+func prometheusHandler() gin.HandlerFunc {
+	h := promhttp.Handler()
+
+	return func(c *gin.Context) {
+		h.ServeHTTP(c.Writer, c.Request)
+	}
+}
+
 func (d *Ingest) registerBasicChecks() {
 
 	// Sanity GET request
@@ -25,9 +33,7 @@ func (d *Ingest) registerBasicChecks() {
 	})
 
 	// metrics
-	d.Engine.GET("/metrics", func(c *gin.Context) {
-		gin.WrapH(promhttp.Handler())
-	})
+	d.Engine.GET("/metrics", prometheusHandler())
 }
 
 func (d *Ingest) registerNoRouteCheck() {
