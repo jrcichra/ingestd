@@ -1,4 +1,4 @@
-FROM golang:1.21.2-bullseye
+FROM golang:1.21.3-bullseye
 WORKDIR /ingestd
 COPY . . 
 RUN CGO_ENABLED=0 go build -o ingestd
