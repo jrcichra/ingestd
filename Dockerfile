@@ -1,4 +1,4 @@
-FROM golang:1.21.6-bullseye as builder
+FROM golang:1.21.6-bookworm as builder
 WORKDIR /ingestd
 COPY . . 
 RUN CGO_ENABLED=0 go build -o ingestd
