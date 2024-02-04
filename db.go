@@ -10,7 +10,7 @@ import (
 
 func (d *Ingest) connectToDB(dsn string, dbtype string) (*sql.DB, error) {
 	// connect to the database
-	log.Println("Connecting with dbtype", dbtype, "and dsn", dsn)
+	log.Println("Connecting with dbtype", dbtype)
 	db, err := sql.Open(dbtype, dsn)
 	if err == nil {
 		log.Println("Connected to database. Doing a Ping()")
@@ -51,7 +51,6 @@ func (d *Ingest) getDSN() string {
 	}
 	//check for DSN key
 	if _, ok := config["DSN"]; ok {
-		log.Println(config["DSN"])
 		return config["DSN"]
 	} else {
 		panic("dsn was empty. Is your configuration file set properly?")
