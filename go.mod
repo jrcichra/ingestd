@@ -3,7 +3,7 @@ module github.com/jrcichra/sim7600g-tools/server
 go 1.22
 
 require (
-	github.com/gin-gonic/gin v1.10.0
+	github.com/gin-gonic/gin v1.10.1
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.9.2
 	github.com/lib/pq v1.10.9
