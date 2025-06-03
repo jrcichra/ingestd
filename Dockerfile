@@ -1,4 +1,4 @@
-FROM golang:1.24.2-bookworm as builder
+FROM golang:1.24.3-bookworm as builder
 WORKDIR /ingestd
 COPY . . 
 RUN CGO_ENABLED=0 go build -o ingestd
