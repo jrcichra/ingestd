@@ -6,7 +6,7 @@ require (
 	github.com/gin-gonic/gin v1.11.0
 	github.com/go-redis/redis v6.15.9+incompatible
 	github.com/go-sql-driver/mysql v1.9.3
-	github.com/lib/pq v1.10.9
+	github.com/lib/pq v1.11.1
 	github.com/prometheus/client_golang v1.23.2
 )
 
